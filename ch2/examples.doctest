@@ -1,0 +1,147 @@
+Example 2-1. Build a list of Unicode codepoints from a string
+
+>>> symbols = '$¢£¥€¤'
+>>> codes = []
+>>> for symbol in symbols:
+...     codes.append(ord(symbol))
+...
+>>> codes
+[36, 162, 163, 165, 8364, 164]
+
+Example 2-2. Build a list of Unicode codepoints from a string, take two
+
+>>> symbols = '$¢£¥€¤'
+>>> codes = [ord(symbol) for symbol in symbols]
+>>> codes
+[36, 162, 163, 165, 8364, 164]
+
+Example 2_3. The same list buil by a listcomp and a map/filter composition
+
+>>> symbols = '$¢£¥€¤'
+>>> beyond_ascii = [ord(s) for s in symbols if ord(s) > 127]
+>>> beyond_ascii
+[162, 163, 165, 8364, 164]
+>>> beyond_ascii = list(filter(lambda c: c > 127, map(ord, symbols)))
+>>> beyond_ascii
+[162, 163, 165, 8364, 164]
+
+Example 2-4. Cartesian product using a list comprehension
+
+>>> colors = ['black', 'white']
+>>> sizes = ['S', 'M', 'L']
+>>> tshirts = [(color, size) for color in colors for size in sizes]
+>>> tshirts
+[('black', 'S'), ('black', 'M'), ('black', 'L'), ('white', 'S'), ('white', 'M'), ('white', 'L')]
+>>> for color in colors:
+...     for size in sizes:
+...         print((color, size))
+...
+('black', 'S')
+('black', 'M')
+('black', 'L')
+('white', 'S')
+('white', 'M')
+('white', 'L')
+>>> tshirts = [(color, size) for size in sizes
+...                          for color in colors]
+>>> tshirts
+[('black', 'S'), ('white', 'S'), ('black', 'M'), ('white', 'M'), ('black', 'L'), ('white', 'L')]
+
+Example 2-5. Initializing a tuple and an array from a generator expression
+
+>>> symbols = '$¢£¥€¤'
+>>> symbols = '$¢£¥€¤'
+>>> tuple(ord(symbol) for symbol in symbols)
+(36, 162, 163, 165, 8364, 164)
+>>> import array
+>>> array.array('I', (ord(symbol) for symbol in symbols))
+array('I', [36, 162, 163, 165, 8364, 164])
+
+Example 2-6. Cartesian product in a generator expression
+
+>>> colors = ['black', 'white']
+>>> sizes = ['S', 'M', 'L']
+>>> for tshirt in (f'{color} {size}' for color in colors for size in sizes):
+...     print(tshirt)
+...
+black S
+black M
+black L
+white S
+white M
+white L
+
+Example 2-7. Tuples used as records
+
+>>> lax_coordinates = (33.9425, -118.408056)
+>>> city, year, pop, chg, area = ('Tokyo', 2003, 32450, 0.66, 8014)
+>>> traveler_ids = [('USA', '31195855'),
+...                 ('BRA', 'CE342567'),
+...                 ('ESP', 'XDA205856')]
+>>> for passport in sorted(traveler_ids):
+...     print('%s/%s' % passport)
+...
+BRA/CE342567
+ESP/XDA205856
+USA/31195855
+>>> for country, _ in traveler_ids:
+...     print(country)
+...
+USA
+BRA
+ESP
+
+Tuple Unpacking Examples
+
+>>> lax_coordinates = (33.9425, -118.408056)
+>>> latitude, longitude = lax_coordinates # tuple unpacking
+>>> latitude
+33.9425
+>>> longitude
+-118.408056
+ 
+>>> divmod(20, 8)
+(2, 4)
+>>> t = (20, 8)
+>>> divmod(*t)
+(2, 4)
+>>> quotient, remainder = divmod(*t)
+>>> quotient, remainder
+(2, 4)
+ 
+>>> import os
+>>> _, filename = os.path.split('/home/luciano/.ssh/idrsa.pub')
+>>> filename
+'idrsa.pub'
+
+Example 2-9. Defining and using a named tuple type
+
+>>> from collections import namedtuple
+>>> City = namedtuple('City', 'name country population coordinates')
+>>> tokyo = City('Tokyo', 'JP', 36.933, (35.682722, 139.691667))
+>>> tokyo
+City(name='Tokyo', country='JP', population=36.933, coordinates=(35.682722, 139.691667))
+>>> tokyo.population
+36.933
+>>> tokyo.coordinates
+(35.682722, 139.691667)
+>>> tokyo[1]
+'JP'
+
+Example 2-10. Named tuple attributes and methods (continued from the previous example)
+
+>>> City._fields
+('name', 'country', 'population', 'coordinates')
+>>> LatLong = namedtuple('LatLong', 'lat long')
+>>> delhi_data = ('Delhi NCR', 'IN', 21.935, (28.613889, 77.208889))
+>>> delhi = City._make(delhi_data)
+>>> delhi._asdict()
+OrderedDict([('name', 'Delhi NCR'), ('country', 'IN'), ('population', 21.935), ('coordinates', (28.613889, 77.208889))])
+>>> for key, value in delhi._asdict().items():
+...     print(key + ':', value)
+...
+name: Delhi NCR
+country: IN
+population: 21.935
+coordinates: (28.613889, 77.208889)
+
